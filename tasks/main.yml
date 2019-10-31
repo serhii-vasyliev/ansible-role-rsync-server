@@ -33,6 +33,7 @@
   loop: "{{ rsync_server_shares }}"
   tags:
     - dirs
+    - rsyncd-dirs
 
 - name: rsyncd | configure logrotate
   become: yes
