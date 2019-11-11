@@ -34,6 +34,7 @@
   tags:
     - dirs
     - rsyncd-dirs
+    - rsyncd.conf
 
 - name: rsyncd | configure logrotate
   become: yes
