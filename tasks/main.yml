@@ -19,6 +19,9 @@
     backup: yes
     dest: /etc/rsyncd.conf
     src: etc-rsyncd-conf.j2
+    mode: '0400'
+    owner: root
+    group: root
   tags:
     - rsyncd.conf
 
@@ -27,7 +30,7 @@
     path: "{{ item.path }}"
     state: directory
     mode: '0755'
-    recurse: yes
+    #recurse: yes
     owner: "{{ item.uid | default('apache') }}"
     group: "{{ item.gid | default('apache') }}"
   loop: "{{ rsync_server_shares }}"
