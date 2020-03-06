@@ -1,5 +1,5 @@
 
-/var/log/rsyncd.log {
+/var/log/rsync/*log /var/log/rsyncd.log {
     {{ rsync_server_logrotate_interval }}
     missingok
     rotate {{ rsync_server_logrotate_backlog_size }}

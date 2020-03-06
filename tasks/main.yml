@@ -10,7 +10,8 @@
 - name: rsyncd | create log directory
   become: yes
   file:
-    path: /var/log/rsyncd
+    path: /var/log/rsync
+    mode: '0750'
     state: directory
 
 - name: rsyncd | configure shares
@@ -37,7 +38,20 @@
   tags:
     - dirs
     - rsyncd-dirs
-    - rsyncd.conf
+    - rsyncd-logs
+
+
+- name: Create a file for logging
+  file:
+    path: "/var/log/rsync/{{ share.name }}.log"
+    state: touch
+    access_time: preserve
+    mode: '0640'
+    owner: root
+    group: root
+  loop: "{{ rsync_server_shares }}"
+  tags:
+    - rsyncd-logs
 
 - name: rsyncd | configure logrotate
   become: yes
@@ -45,6 +59,18 @@
     backup: no
     dest: /etc/logrotate.d/rsyncd
     src: logrotated-rsyncd.j2
+  tags:
+    - rsyncd-logs
+    - rsyncd-logrotate
+
+- name: remove old logrotate file
+  become: yes
+  file:
+    path: /etc/logrotate.d/rsync
+    state: absent
+  tags:
+    - rsyncd-logs
+    - rsyncd-logrotate
 
 - name: rsyncd | selinux allow network connect
   become: yes
