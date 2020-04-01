@@ -7,13 +7,6 @@
     pkg: rsync
     state: present
 
-- name: rsyncd | create log directory
-  become: yes
-  file:
-    path: /var/log/rsync
-    mode: '0750'
-    state: directory
-
 - name: rsyncd | configure shares
   become: yes
   template:
@@ -37,40 +30,11 @@
   loop: "{{ rsync_server_shares }}"
   tags:
     - dirs
-    - rsyncd-dirs
-    - rsyncd-logs
 
-
-- name: Create a file for logging
-  file:
-    path: "/var/log/rsync/{{ share.name }}.log"
-    state: touch
-    access_time: preserve
-    mode: '0640'
-    owner: root
-    group: root
-  loop: "{{ rsync_server_shares }}"
+- name: logrotate rsync logs
+  include: logrotate.yml
   tags:
     - rsyncd-logs
-
-- name: rsyncd | configure logrotate
-  become: yes
-  template:
-    backup: no
-    dest: /etc/logrotate.d/rsyncd
-    src: logrotated-rsyncd.j2
-  tags:
-    - rsyncd-logs
-    - rsyncd-logrotate
-
-- name: remove old logrotate file
-  become: yes
-  file:
-    path: /etc/logrotate.d/rsync
-    state: absent
-  tags:
-    - rsyncd-logs
-    - rsyncd-logrotate
 
 - name: rsyncd | selinux allow network connect
   become: yes
@@ -80,9 +44,17 @@
     persistent: yes
   when: selinux_enabled
 
+- name: run rsyncd through xinetd
+  include: xinetd.yml
+  when: is_xinetd 
+  tags:
+    - xinetd
+
 - name: rsyncd | start and enable service
   become: yes
   service:
     name: rsyncd
     enabled: yes
     state: started
+  when: not is_xinetd 
+

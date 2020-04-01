@@ -1,27 +1,28 @@
 ---
 
-- name: xinetd | install rsync
+- name: xinetd | install xinetd
   become: yes
   yum:
     pkg: xinetd
     state: present
-  tags:
-    - xinetd
 
-#- name: logrotate.d/rsync & xinetd.d/rsync
+- name: rsyncd | stop and disable service
+  become: yes
+  service:
+    name: rsyncd
+    enabled: no
+    state: stopped
+  ignore_errors: true
+
 - name: xinetd.d/rsync
-  copy:
-    backup: yes
+  template:
+    backup: no
     owner: "root"
     group: "root"
-    mode: 0644
-    src: "etc/"
-    dest: "/etc/"
-  tags:
-    - xinetd
+    mode: 0400
+    src: "etc-xinetd-rsync.j2"
+    dest: "/etc/xinetd.d/"
 
 - name: enable xinetd
   service: name=xinetd  enabled=yes state=restarted
-  tags:
-    - xinetd
 

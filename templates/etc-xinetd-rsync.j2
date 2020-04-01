@@ -4,10 +4,13 @@ service rsync
         socket_type     = stream
         wait            = no
         user            = root
-#       server          = /usr/bin/rsync
-#       server_args     = --daemon
+{% if is_ionice %}
         server          = /usr/bin/ionice
-        server_args     =  -c 3 /usr/bin/rsync  --daemon
+        server_args     =  -c 3 /usr/bin/rsync --daemon
+{% else %}
+        server          = /usr/bin/rsync
+        server_args     = --daemon
+{% endif %}
         log_on_failure  += USERID
 }
 
