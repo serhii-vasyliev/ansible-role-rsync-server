@@ -22,7 +22,9 @@
     backup: no
     dest: /etc/logrotate.d/rsyncd
     src: logrotated-rsyncd.j2
-    mode: 0400
+    owner: root
+    group: root
+    mode: 0440
   tags:
     - rsyncd-logrotate
 
