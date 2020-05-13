@@ -1,6 +1,9 @@
 ---
 # defaults file for rsync-server
 
+# list = can be 'yes' or 'no'
+rsyncd_is_list_shares: 'no'
+
 is_xinetd: true
 is_ionice: true
 
