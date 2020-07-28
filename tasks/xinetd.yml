@@ -21,7 +21,7 @@
     group: "root"
     mode: 0400
     src: "etc-xinetd-rsync.j2"
-    dest: "/etc/xinetd.d/"
+    dest: "/etc/xinetd.d/rsync"
 
 - name: enable xinetd
   service: name=xinetd  enabled=yes state=restarted

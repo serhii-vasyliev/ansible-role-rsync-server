@@ -1,17 +1,22 @@
 ---
-# defaults file for rsync-server
+# logrotate defaults
+rsync_server_logrotate_interval: weekly
+rsync_server_logrotate_backlog_size: 52
 
-# list = can be 'yes' or 'no'
-rsyncd_is_list_shares: 'no'
-
+# start with xinetd or as rsyncd service
 is_xinetd: true
 is_ionice: true
 
+# defaults for rsyncd.conf global section
+is_readonly: 'true'
+rsync_def_uid: root
+rsync_def_gid: root
 rsync_server_timeout: 300
 rsync_server_max_connections: 10
 rsync_server_hosts_allow: 127.0.0.1
 rsync_server_auth_users: bkp
-rsync_server_shares: []
 
-rsync_server_logrotate_interval: weekly
-rsync_server_logrotate_backlog_size: 52
+# list = can be 'yes' or 'no'
+rsyncd_is_list_shares: 'no'
+
+rsync_server_shares: []

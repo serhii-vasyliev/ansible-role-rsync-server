@@ -10,6 +10,8 @@ transfer logging = yes
 log file = /var/log/rsyncd.log
 list = {{ rsyncd_is_list_shares }}
 dont compress   = *.gz *.tgz *.zip *.z *.Z *.rpm *.deb *.bz2
+uid = {{ rsync_def_uid }}
+gid = {{ rsync_def_gid }}
 
 {% for share in rsync_server_shares %}
 [{{ share.name }}]
